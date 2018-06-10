@@ -32,3 +32,38 @@ class User(TimestampMixin, UserMixin, db.Model):
     
     def is_admin(self):
         return self.admin_rights == 1
+
+class Profession(TimestampMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(31))
+    # This enables reversing the foreign key
+    # i.e. look up all parents based on the profession.
+    parents = db.relationship("Parent",backref="objective",lazy="dynamic")
+
+
+# Example Many to Many table relationship
+many_to_many_table = db.Table('M_to_M_table_name',
+    db.Column('parent_id', db.Integer, db.ForeignKey('parent.id'), primary_key=True),
+    db.Column('child_id', db.Integer, db.ForeignKey('child.id'), primary_key=True)
+    )
+
+
+class Parent(TimestampMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(15))
+    # Example Foreign Key Reference
+    profession_id = db.Column(db.Integer, db.ForeignKey('profession.id'))
+    # How to reference a many-to-many table 
+    # variable = (Model, secondary = variable storing M:M, backref = name when reversed (attribute for children))
+    children = db.relationship("Chile", secondary=many_to_many_table, backref=db.backref("parents",lazy=True),lazy="subquery")
+
+    def __repr__(self):
+        return '<Parent {}>'.format(self.name)
+
+
+class Child(TimestampMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(15))
+    
+    def __repr__(self):
+        return '<Child {}>'.format(self.name)

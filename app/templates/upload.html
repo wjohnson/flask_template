@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+            <h1>Upload a File:</h1>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            
+        <span id="formstatus" class="hidden" style="font-weight:bold;color:crimson">Please wait while your upload is being processed.</span>
+        <form method=post id="bulkform" enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit id="bulksubmit" value=Upload>
+          </form>
+      
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$('form#bulkform').submit(function(){
+    $(this).find(':input[type=submit]').prop('disabled', true);
+    $("#formstatus").removeClass("hidden");
+});
+</script>
+{% endblock %}

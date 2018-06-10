@@ -6,7 +6,8 @@ from flask_login import LoginManager
 
 appvar = Flask(__name__)
 appvar.config.from_object(Config)
-#appvar.config['TESTING'] = False
+
+ALLOWED_EXTENSIONS = set(['csv', 'jpg', 'jpeg','png'])
 
 db = SQLAlchemy(appvar)
 migrate = Migrate(appvar, db)
