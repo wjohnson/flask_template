@@ -29,6 +29,23 @@ This template is available for you to use, but comes with no guarantee or warran
 * OPTIONAL: Create an Azure SQL DB Server and Database
   * [Quick Start](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-get-started-portal)
   * Create an [application user](https://docs.microsoft.com/en-us/sql/relational-databases/security/authentication-access/create-a-database-user?view=sql-server-2017) and grant them [permissions](https://docs.microsoft.com/en-us/sql/relational-databases/security/authentication-access/getting-started-with-database-engine-permissions?view=sql-server-2017#permission-hierarchy).
+
+    --On master
+    CREATE LOGIN some_application_user 
+	WITH PASSWORD = 'SomeSecurePassword'
+    
+    --On your application db
+    CREATE USER some_application_user 
+	FOR LOGIN some_application_user 
+	WITH DEFAULT_SCHEMA = dbo
+    GO
+
+    -- Add user to the database owner role
+    EXEC sp_addrolemember N'db_datareader', N'some_application_user'
+    GO
+    EXEC sp_addrolemember N'db_datawriter', N'some_application_user'
+    GO
+
 * MISCELLANEOUS Checklist
   * Add the environment variables to web.config.
   * Create any additional folders on the kudu console.
@@ -36,7 +53,7 @@ This template is available for you to use, but comes with no guarantee or warran
 # Working with VS Code and Flask Apps
 
 * Setting an environment variable.
-  * Powershell: $(env:MyVariable)=SomeValue
+  * Powershell: $env:MyVariable=SomeValue
   * CMD: set MyVariable=SomeValue
   * Linux: export MyVariable=SomeValue
 * Viewing an environment variable
