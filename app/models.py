@@ -55,7 +55,7 @@ class Parent(TimestampMixin, db.Model):
     profession_id = db.Column(db.Integer, db.ForeignKey('profession.id'))
     # How to reference a many-to-many table 
     # variable = (Model, secondary = variable storing M:M, backref = name when reversed (attribute for children))
-    children = db.relationship("Chile", secondary=many_to_many_table, backref=db.backref("parents",lazy=True),lazy="subquery")
+    children = db.relationship("Child", secondary=many_to_many_table, backref=db.backref("parents",lazy=True),lazy="subquery")
 
     def __repr__(self):
         return '<Parent {}>'.format(self.name)
